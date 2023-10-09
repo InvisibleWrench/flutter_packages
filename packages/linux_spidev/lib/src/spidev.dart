@@ -463,7 +463,7 @@ class SpiTransferExecutor {
   int _nextTransferId = 0;
 
   void _onIsolateData(dynamic untypedData) {
-    final data = untypedData as Tuple3<int, dynamic, StackTrace>;
+    final data = untypedData as Tuple3<int, dynamic, StackTrace?>;
 
     final transferId = data.item1;
     final error = data.item2;
