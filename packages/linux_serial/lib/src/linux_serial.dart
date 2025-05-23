@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:_ardera_common_libc_bindings/linux_error.dart';
 import 'package:computer/computer.dart';
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
@@ -382,7 +383,12 @@ class PlatformInterface {
     final result = libc.read(fd, buffer.cast<ffi.Void>(), bufferSize);
 
     if (result < 0) {
-      throw OSError("Could not read from serial port fd.");
+      if (libc.errno == 11) {
+        // Ignore EAGAIN errors
+        print("Ignore EAGAIN");
+        return 0;
+      }
+      throw LinuxError("Could not read from serial port fd.", 'read', libc.errno);
     }
 
     return result;
